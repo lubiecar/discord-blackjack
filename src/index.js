@@ -62,7 +62,7 @@ module.exports = async (message, client, options) => {
     if (!message.guild || !message.guild.me) throw new TypeError("[WRONG_USAGE]: This cannot be used in DMs!")
     
     if (games.has(message.author.id)) {
-        return message.channel.send("You are already playing a game!")
+        return message.channel.send("Zaten blackjack oyununu oynuyorsun.")
     }
     games.add(message.author.id)
     try {
@@ -166,17 +166,16 @@ module.exports = async (message, client, options) => {
         let dealeremoji = [NEWDECKS[1].emoji, NEWDECKS[3].emoji]
         let dealercontent = [`${NEWDECKS[1].emoji} ${NEWDECKS[1].rank}`, `${NEWDECKS[3].emoji} ${NEWDECKS[3].rank}`]
         let dvalue = dealerdeck[0].value + dealerdeck[1].value
-        let usertag = message.author.tag
+        let usertag = message.author.username
         let avatar = message.author.displayAvatarURL()
 
         if (normalembed == false) {
             normalembed = new Discord.MessageEmbed()
-                .setAuthor(usertag, avatar)
+                .setAuthor("Blackjack", avatar)
                 .setColor("RANDOM")
-                .addField(`Your Hand`, `Cards: [\`${yourcontent.join("\`](https://google.com) [\`")}\`](https://google.com)\nTotal: \`${addco}${value}\``, true)
-                .addField(`${client.user.username}'s Hand`, `Cards: [\`${dealerdeck[0].emoji} ${dealerdeck[0].rank}\`](https://google.com) \` ? \`\nTotal: \` ? \``, true)
-                .setTitle(`Blackjack Game`)
-                .setFooter("Type E or End to stop the game")
+                .addField(usertag, `Kartlar: [\`${yourcontent.join("\`](https://google.com) [\`")}\`](https://google.com)\nToplam: \`${addco}${value}\``, true)
+                .addField(client.user.username, `Kartlar: [\`${dealerdeck[0].emoji} ${dealerdeck[0].rank}\`](https://google.com) \` ? \`\nToplam: \` ? \``, true)
+                .setFooter("Oyunu sonlandırmak için \"e\" yazın.")
         } else {
             normalembed.fields[0].value = normalembed.fields[0].value.replace(`{yourcontent}`, `[\`${yourcontent.join("\`](https://google.com) [\`")}\`](https://google.com)`).replace("{yvalue}", `${addco}${value}`)
             normalembed.fields[1].value = normalembed.fields[1].value.replace(`{dcontent}`, `[\`${dealerdeck[0].emoji} ${dealerdeck[0].rank}\`](https://google.com)   \` ? \``).replace("{dvalue}", `?`)
@@ -185,42 +184,37 @@ module.exports = async (message, client, options) => {
         }
 
         let winembed = new Discord.MessageEmbed()
-            .setAuthor(usertag, avatar)
-            .setColor("#008800")
-            .addField(`Your Hand`, `Cards: [\`${yourcontent.join("`](https://google.com)   [`")}\`](https://google.com)\nTotal: \`${addco}${value}\``, true)
-            .addField(`${client.user.username}'s Hand`, `Cards: [\`${dealercontent.join("`](https://google.com)   [`")}\`](https://google.com)\nTotal: \`${dvalue}\``, true)
-            .setTitle(`You won!`)
+            .setAuthor("Kazandın!", avatar)
+            .setColor("GREEN")
+            .addField(usertag, `Kartlar: [\`${yourcontent.join("`](https://google.com)   [`")}\`](https://google.com)\nToplam: \`${addco}${value}\``, true)
+            .addField(client.user.username, `Kartlar: [\`${dealercontent.join("`](https://google.com)   [`")}\`](https://google.com)\nToplam: \`${dvalue}\``, true)
 
         let loseembed = new Discord.MessageEmbed()
-            .setAuthor(usertag, avatar)
-            .setColor("#880000")
-            .addField(`Your Hand`, `Cards: [\`${yourcontent.join("`](https://google.com)   [`")}](https://google.com)\`\nTotal: \`${addco}${value}\``, true)
-            .addField(`${client.user.username}'s Hand`, `Cards: [\`${dealercontent.join("`](https://google.com)   [`")}\`](https://google.com)\nTotal: \`${dvalue}\``, true)
-            .setTitle(`You lost!`)
+            .setAuthor("Kaybettin!", avatar)
+            .setColor("RED")
+            .addField(usertag, `Kartlar: [\`${yourcontent.join("`](https://google.com)   [`")}](https://google.com)\`\nToplam: \`${addco}${value}\``, true)
+            .addField(client.user.username, `Kartlar: [\`${dealercontent.join("`](https://google.com)   [`")}\`](https://google.com)\nToplam: \`${dvalue}\``, true)
 
         let tieembed = new Discord.MessageEmbed()
-            .setAuthor(usertag, avatar)
-            .setColor("#888800")
-            .addField(`Your Hand`, `Cards: [\`${yourcontent.join("`](https://google.com)   [`")}](https://google.com)\`\nTotal: \`${addco}${value}\``, true)
-            .addField(`${client.user.username}'s Hand`, `Cards: [\`${dealercontent.join("`](https://google.com)   [`")}\`](https://google.com)\nTotal: \`${dvalue}\``, true)
-            .setTitle(`It's a tie!`)
+            .setAuthor("Berabere!", avatar)
+            .setColor("GRAY")
+            .addField(usertag, `Kartlar: [\`${yourcontent.join("`](https://google.com)   [`")}](https://google.com)\`\nToplam: \`${addco}${value}\``, true)
+            .addField(client.user.username, `Kartlar: [\`${dealercontent.join("`](https://google.com)   [`")}\`](https://google.com)\nToplam: \`${dvalue}\``, true)
 
         let cancelembed = new Discord.MessageEmbed()
-            .setAuthor(usertag, avatar)
-            .setColor("#880000")
-            .setTitle("Game Canceled")
-            .setFooter("Auhh, please stay next time!")
-            .setDescription("Game has succesfully been canceled!")
+            .setAuthor('Oyun Sona Erdi.', avatar)
+            .setColor("RED")
+            .setFooter("Bruh.")
+            .setDescription("Oyun sonra erdi, paranızın %75'i iade edildi.")
 
         let noResEmbed = new Discord.MessageEmbed()
-            .setAuthor(usertag, avatar)
-            .setTitle(`Game Ended`)
-            .setDescription(`**${message.author.username}, your Game has Ended due to 30 seconds of Inactivity.**`)
-            .setColor("RANDOM")
+            .setAuthor('Oyun Sona Erdi.', avatar)
+            .setDescription(`30 saniye boyunca cevap vermediğiniz için oyun sona erdi, paranızın %75'i iade edildi.`)
+            .setColor("RED")
 
-        let normalcontent = `Type \`h\` to draw a card or type \`s\` to stand.`
-        let doubledown = `Type \`h\` to draw a card, type \`s\` to stand or type \`d\` to double down.`
-        let split = `Type \`h\` to draw a card, type \`s\` to stand or \`split\` to split`
+        let normalcontent = `Kart çekmek için \`h\`, pas geçmek için ise \`s\` yazın.`
+        let doubledown = `Kart çekmek için \`h\`, pas geçmek için \`s\`, kart değerini ikiye katlamak için \`d\` yazın.`
+        let split = `Kart çekmek için \`h\`, pas geçmek için \`s\`, kartlarını bölmek için \`split\` yazın.`
         let content = normalcontent
 
         let answers1 = ["h", "hit", "hi", "e", "en", "end", "s", "stand", "st", "sta", "stan"] // normalcontent
@@ -301,7 +295,7 @@ module.exports = async (message, client, options) => {
 
                         }
                         if (options.normalEmbed == true) {
-                            normalembed.fields[0].value = `Cards: [\`${yourcontent.join("`](https://google.com)   [`")}\`](https://google.com)\nTotal: \`${addco}${value}\``
+                            normalembed.fields[0].value = `Kartlar: [\`${yourcontent.join("`](https://google.com)   [`")}\`](https://google.com)\nToplam: \`${addco}${value}\``
                         } else {
                             normalembed.fields[0].value = normalembed.fields[0].value.replace(copiedEmbed.content, `[\`${yourcontent.join("`](https://google.com)   [`")}\`](https://google.com)`).replace(`{yvalue}`, `${addco}${value}`)
                             copiedEmbed.content = `[\`${yourcontent.join("`](https://google.com)   [`")}\`](https://google.com)`
@@ -355,7 +349,7 @@ module.exports = async (message, client, options) => {
             youremoji.pop()
             yourcontent.pop()
             if (options.normalEmbed == true) {
-                normalembed.fields[0].value = `Cards: [\`${yourcontent.join("`](https://google.com)   [`")}\`](https://google.com)\nTotal: \`${addco}${value}\``
+                normalembed.fields[0].value = `Kartlar: [\`${yourcontent.join("`](https://google.com)   [`")}\`](https://google.com)\nToplam: \`${addco}${value}\``
             } else {
                 normalembed.fields[0].value = normalembed.fields[0].value.replace(copiedEmbed.content, `[\`${yourcontent.join("`](https://google.com)   [`")}\`](https://google.com)`).replace(`{yvalue}`, `${addco}${value}`)
                 copiedEmbed.content = `[\`${yourcontent.join("`](https://google.com)   [`")}\`](https://google.com)`
@@ -409,7 +403,7 @@ module.exports = async (message, client, options) => {
                             }
                         }
                         if (options.normalEmbed == true) {
-                            normalembed.fields[0].value = `Cards: [\`${yourcontent.join("`](https://google.com)   [`")}\`](https://google.com)\nTotal: \`${addco}${value}\``
+                            normalembed.fields[0].value = `Kartlar: [\`${yourcontent.join("`](https://google.com)   [`")}\`](https://google.com)\nToplam: \`${addco}${value}\``
                         } else {
                             normalembed.fields[0].value = normalembed.fields[0].value.replace(copiedEmbed.content, `[\`${yourcontent.join("`](https://google.com)   [`")}\`](https://google.com)`).replace(`{yvalue}`, `${addco}${value}`)
                             copiedEmbed.content = `[\`${yourcontent.join("`](https://google.com)   [`")}\`](https://google.com)`
@@ -465,14 +459,14 @@ module.exports = async (message, client, options) => {
             
             if (value > 21 || (dvalue <= 21 && value < dvalue)) {
                 if (value > 21) {
-                    method = "Busted"
+                    method = "Dealer bust"
                 } else if (dvalue == 21) {
-                    method = "Dealer reached 21"
+                    method = "Blackjack"
                 } else {
                     method = "Dealer had more"
                 }
-                loseembed.fields[0].value = `Cards: [\`${yourcontent.join("`](https://google.com)   [`")}\`](https://google.com)\nTotal: \`${addco}${value}\``
-                loseembed.fields[1].value = `Cards: [\`${dealercontent.join("`](https://google.com)   [`")}\`](https://google.com)\nTotal: \`${dvalue}\``
+                loseembed.fields[0].value = `Kartlar: [\`${yourcontent.join("`](https://google.com)   [`")}\`](https://google.com)\nToplam: \`${addco}${value}\``
+                loseembed.fields[1].value = `Kartlar: [\`${dealercontent.join("`](https://google.com)   [`")}\`](https://google.com)\nToplam: \`${dvalue}\``
                 if (options.resultEmbed == true) {
                     message.channel.send({ embed: loseembed })
                 }
@@ -488,8 +482,8 @@ module.exports = async (message, client, options) => {
                 } else {
                     method = "Player had more"
                 }
-                winembed.fields[0].value = `Cards: [\`${yourcontent.join("`](https://google.com)   [`")}\`](https://google.com)\nTotal: \`${addco}${value}\``
-                winembed.fields[1].value = `Cards: [\`${dealercontent.join("`](https://google.com)   [`")}\`](https://google.com)\nTotal: \`${dvalue}\``
+                winembed.fields[0].value = `Kartlar: [\`${yourcontent.join("`](https://google.com)   [`")}\`](https://google.com)\nToplam: \`${addco}${value}\``
+                winembed.fields[1].value = `Kartlar: [\`${dealercontent.join("`](https://google.com)   [`")}\`](https://google.com)\nToplam: \`${dvalue}\``
                 if (options.resultEmbed == true) {
                     message.channel.send({ embed: winembed })
                 }
@@ -499,8 +493,8 @@ module.exports = async (message, client, options) => {
                 }
             } else if (value == dvalue) {
                 method = "Tie"
-                tieembed.fields[0].value = `Cards: [\`${yourcontent.join("`](https://google.com)   [`")}\`](https://google.com)\nTotal: \`${addco}${value}\``
-                tieembed.fields[1].value = `Cards: [\`${dealercontent.join("`](https://google.com)   [`")}\`](https://google.com)\nTotal: \`${dvalue}\``
+                tieembed.fields[0].value = `Kartlar: [\`${yourcontent.join("`](https://google.com)   [`")}\`](https://google.com)\nToplam: \`${addco}${value}\``
+                tieembed.fields[1].value = `Kartlar: [\`${dealercontent.join("`](https://google.com)   [`")}\`](https://google.com)\nToplam: \`${dvalue}\``
                 if (options.resultEmbed == true) {
                     message.channel.send({ embed: tieembed })
                 }
@@ -508,10 +502,9 @@ module.exports = async (message, client, options) => {
             } else {
                 let errEmbed = new Discord.MessageEmbed()
                     .setAuthor(usertag, avatar)
-                    .setTitle("An Error Occured")
-                    .setDescription("Uh oh! An error occured! Please join our server by clicking [here](https://discord.gg/DcC4xFfTnB)")
-                    .setFooter("Oops")
-                    .setColor("#FF0000")
+                    .setDescription("Bir hata oluştuğu için paran iade edildi.")
+                    .setFooter("knk.")
+                    .setColor("RED")
                 if (options.resultEmbed == true) {
                     message.channel.send({ embed: errEmbed })
                 }
