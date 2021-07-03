@@ -1,7 +1,7 @@
 # Discord Blackjack
 
 # Note
-I just changed the lang of the package.
+just changed the messages
 
 # IMPORTANT
 Version 2 has breaking changes. Please read our docs and example at [https://discord-blackjack.org](https://17ashishemmanuel.gitbook.io/discord-blackjack/)
